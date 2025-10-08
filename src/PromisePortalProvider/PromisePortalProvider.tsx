@@ -9,6 +9,7 @@ import {
   PromiseComponentResult,
   ComponentParam,
   ComponentProps,
+  PromiseComponentProps,
 } from "../types";
 import {
   composeUpdater,
@@ -65,7 +66,9 @@ export const PromisePortalProvider = ({ children }: Props) => {
 
   const showPortalAsync = useCallback(
     <P extends ComponentProps, T>(
-      component: ComponentParam<P>,
+      component: ComponentParam<
+        P & Omit<PromiseComponentProps, "transitionDelay">
+      >,
       props: ComponentProps = {},
     ): Promise<PromiseComponentResult<T>> => {
       const Component = (
@@ -90,7 +93,9 @@ export const PromisePortalProvider = ({ children }: Props) => {
   );
 
   const showPortal = <P extends ComponentProps>(
-    component: ComponentParam<P>,
+    component: ComponentParam<
+      P & Omit<PromiseComponentProps, "transitionDelay">
+    >,
     props?: P,
   ) => {
     const Component = (
