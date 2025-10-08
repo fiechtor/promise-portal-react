@@ -34,11 +34,23 @@ export const buildAwaitablePortal =
       forceShow: true,
       onCancel: (data?: T): void => {
         resolve({ cancelled: true, data });
-        context.removePortal(id);
+        context.setPortals((prev) =>
+          prev.map((p) => (p.id === id ? { ...p, open: false } : p)),
+        );
+        setTimeout(
+          () => context.removePortal(id),
+          (((props || {}) as ComponentProps).transitionDelay as number) || 0,
+        );
       },
       onComplete: (data?: T): void => {
         resolve({ cancelled: false, data });
-        context.removePortal(id);
+        context.setPortals((prev) =>
+          prev.map((p) => (p.id === id ? { ...p, open: false } : p)),
+        );
+        setTimeout(
+          () => context.removePortal(id),
+          (((props || {}) as ComponentProps).transitionDelay as number) || 0,
+        );
       },
       onError: (error: Error, errorInfo: ErrorInfo): void => {
         reject({ cancelled: false, error, errorInfo });
@@ -66,10 +78,22 @@ export const buildPortal =
       forceShow: true,
       forwardRef,
       onCancel: (): void => {
-        context.removePortal(id);
+        context.setPortals((prev) =>
+          prev.map((p) => (p.id === id ? { ...p, open: false } : p)),
+        );
+        setTimeout(
+          () => context.removePortal(id),
+          (((props || {}) as ComponentProps).transitionDelay as number) || 0,
+        );
       },
       onComplete: (): void => {
-        context.removePortal(id);
+        context.setPortals((prev) =>
+          prev.map((p) => (p.id === id ? { ...p, open: false } : p)),
+        );
+        setTimeout(
+          () => context.removePortal(id),
+          (((props || {}) as ComponentProps).transitionDelay as number) || 0,
+        );
       },
       onError: (error: Error): void => {
         context.removePortal(id);

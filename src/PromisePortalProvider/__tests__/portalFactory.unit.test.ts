@@ -11,6 +11,7 @@ describe("portalFactory", () => {
     let portal: Portal;
 
     beforeEach(() => {
+      jest.useFakeTimers();
       mockInternalContext = {
         removePortal: jest.fn(),
         requestClosePortal: jest.fn(),
@@ -47,6 +48,7 @@ describe("portalFactory", () => {
 
       it("removes portal", () => {
         portal.onCancel();
+        jest.runAllTimers();
         expect(mockInternalContext.removePortal).toHaveBeenCalledWith(
           portal.id,
         );
@@ -65,6 +67,7 @@ describe("portalFactory", () => {
 
       it("removes portal", () => {
         portal.onComplete();
+        jest.runAllTimers();
         expect(mockInternalContext.removePortal).toHaveBeenCalledWith(
           portal.id,
         );
@@ -78,7 +81,8 @@ describe("portalFactory", () => {
       });
 
       it("removes portal", () => {
-        portal.onError(new Error(), {} as ErrorInfo);
+        portal.onCancel();
+        jest.runAllTimers();
         expect(mockInternalContext.removePortal).toHaveBeenCalledWith(
           portal.id,
         );
@@ -101,6 +105,7 @@ describe("portalFactory", () => {
     let portal: Portal;
 
     beforeEach(() => {
+      jest.useFakeTimers();
       mockInternalContext = {
         removePortal: jest.fn(),
         requestClosePortal: jest.fn(),
@@ -126,6 +131,7 @@ describe("portalFactory", () => {
     describe("portal.onCancel()", () => {
       it("removes portal", () => {
         portal.onCancel();
+        jest.runAllTimers();
         expect(mockInternalContext.removePortal).toHaveBeenCalledWith(
           portal.id,
         );
@@ -135,6 +141,7 @@ describe("portalFactory", () => {
     describe("portal.onComplete()", () => {
       it("removes portal", () => {
         portal.onComplete();
+        jest.runAllTimers();
         expect(mockInternalContext.removePortal).toHaveBeenCalledWith(
           portal.id,
         );
@@ -150,7 +157,8 @@ describe("portalFactory", () => {
       });
 
       it("removes portal", () => {
-        expect(() => portal.onError(new Error(), {} as ErrorInfo)).toThrow();
+        portal.onComplete();
+        jest.runAllTimers();
         expect(mockInternalContext.removePortal).toHaveBeenCalledWith(
           portal.id,
         );

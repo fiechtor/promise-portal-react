@@ -32,6 +32,8 @@ export interface PromiseComponentProps<T = unknown> {
   complete(data: T): void;
   /** Sets `open` to false to facilitate close animations */
   requestClose(): void;
+  /** Delay in milliseconds before closing the portal after cancel or complete */
+  transitionDelay?: number;
 }
 
 export interface ShowPortalResult {
