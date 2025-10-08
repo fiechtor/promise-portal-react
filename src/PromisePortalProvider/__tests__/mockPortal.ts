@@ -3,7 +3,7 @@ import { Portal, PortalComponentType } from "../../types";
 
 export default function getMockPortal(
   id: string,
-  componentName?: string
+  componentName?: string,
 ): Portal {
   class MockComponent extends React.Component {
     static displayName = componentName;
@@ -13,6 +13,7 @@ export default function getMockPortal(
     id,
     Component: MockComponent as PortalComponentType,
     open: true,
+    props: {},
     onComplete: jest.fn(),
     onCancel: jest.fn(),
     onError: jest.fn(),

@@ -1,4 +1,4 @@
-import { Component, ReactNode, RefObject } from "react";
+import { Component, ReactNode } from "react";
 import {
   ComponentParam,
   ComponentProps,
@@ -22,18 +22,21 @@ class Dispatcher extends Component<PromisePortalActions> {
     Dispatcher.instance = this;
   }
 
-  static showPortal = (
-    component: ComponentParam,
-    props?: ComponentProps
+  static showPortal = <P extends ComponentProps>(
+    component: ComponentParam<P>,
+    props?: P,
   ): ShowPortalResult => {
-    return Dispatcher.instance.props.showPortal(component, props);
+    return Dispatcher.instance.props.showPortal<P>(component, props);
   };
 
-  static showPortalAsync = async <T,>(
-    component: ComponentParam,
-    props?: ComponentProps
+  static showPortalAsync = async <P extends ComponentProps, T>(
+    component: ComponentParam<P>,
+    props?: P,
   ): Promise<PromiseComponentResult<T>> => {
-    return await Dispatcher.instance.props.showPortalAsync<T>(component, props);
+    return await Dispatcher.instance.props.showPortalAsync<P, T>(
+      component,
+      props,
+    );
   };
 
   static clear = (predicate?: MatchPortalPredicate): void => {

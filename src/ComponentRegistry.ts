@@ -1,4 +1,4 @@
-import { ReactType } from "react";
+import { ComponentType } from "react";
 
 /**
  * ComponentRegistry is used for registering react components to
@@ -9,16 +9,21 @@ import { ReactType } from "react";
  * ered with that string.
  */
 class ComponentRegistry {
-  private static registry: Record<string, ReactType> = {};
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private static registry: Record<string, ComponentType<any>> = {};
 
-  static register(key: string, Component: ReactType): void {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  static register(key: string, Component: ComponentType<any>): void {
     ComponentRegistry.registry[key] = Component;
   }
 
-  static registerCollection(components: Record<string, ReactType>): void {
+  static registerCollection(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    components: Record<string, ComponentType<any>>,
+  ): void {
     ComponentRegistry.registry = Object.assign(
       ComponentRegistry.registry,
-      components
+      components,
     );
   }
 
@@ -26,7 +31,8 @@ class ComponentRegistry {
     delete ComponentRegistry.registry[key];
   }
 
-  static find(key: string): ReactType {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  static find(key: string): ComponentType<any> {
     return ComponentRegistry.registry[key];
   }
 

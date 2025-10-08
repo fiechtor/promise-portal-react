@@ -1,8 +1,8 @@
-import React, { ReactNode } from 'react';
-import { ShowPortalResult } from './types';
-import usePromisePortal from './usePromisePortal';
+import React, { ReactNode } from "react";
+import { ShowPortalResult } from "./types";
+import usePromisePortal from "./usePromisePortal";
 
-type CloseStrategy = 'cancel' | 'requestClose';
+type CloseStrategy = "cancel" | "requestClose";
 
 interface Props {
   closeStrategy?: CloseStrategy;
@@ -10,9 +10,9 @@ interface Props {
 }
 
 function Portal(props: Props) {
-  const { children, closeStrategy = 'cancel' } = props;
+  const { children, closeStrategy = "cancel" } = props;
   const { showPortal } = usePromisePortal();
-  const ref = React.useRef<ShowPortalResult>();
+  const ref = React.useRef<ShowPortalResult>(undefined);
 
   React.useEffect(() => {
     ref.current = showPortal(() => <>{children}</>);

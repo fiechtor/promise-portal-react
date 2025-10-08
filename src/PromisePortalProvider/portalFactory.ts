@@ -14,16 +14,16 @@ import { ProviderInternalContext } from "./types";
 export const buildAwaitablePortal =
   <T>(
     resolve: (
-      value: PromiseComponentResult<T> | PromiseLike<PromiseComponentResult<T>>
+      value: PromiseComponentResult<T> | PromiseLike<PromiseComponentResult<T>>,
     ) => void,
     reject: (
-      value: PromiseComponentResult<T> | PromiseLike<PromiseComponentResult<T>>
-    ) => void
+      value: PromiseComponentResult<T> | PromiseLike<PromiseComponentResult<T>>,
+    ) => void,
   ) =>
   (
     Component: PortalComponentType,
-    props: Record<string, unknown>,
-    context: ProviderInternalContext
+    props: ComponentProps,
+    context: ProviderInternalContext,
   ): Portal<T> => {
     const id = (props.key as string) ?? generateSimpleUniqueId();
     return {
@@ -50,17 +50,19 @@ export const buildAwaitablePortal =
 
 export const buildPortal =
   (forwardRef: RefObject<unknown> | null) =>
-  (
+  <P extends ComponentProps>(
     Component: PortalComponentType,
-    props: Record<string, unknown>,
-    context: ProviderInternalContext
+    props: P | undefined,
+    context: ProviderInternalContext,
   ): Portal => {
-    const id = (props.key as string) ?? generateSimpleUniqueId();
+    const id =
+      (((props || {}) as Record<string, unknown>).key as string) ??
+      generateSimpleUniqueId();
     return {
       id,
       Component,
       open: true,
-      props,
+      props: (props || {}) as ComponentProps,
       forceShow: true,
       forwardRef,
       onCancel: (): void => {

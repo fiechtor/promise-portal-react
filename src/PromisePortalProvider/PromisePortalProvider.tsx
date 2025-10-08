@@ -1,5 +1,4 @@
-import React, { Suspense, useState, useCallback } from "react";
-import startTransition from '../utils/startTransition.polyfill';
+import React, { Suspense, useState, useCallback, startTransition } from "react";
 import PromisePortalContext from "../PromisePortalContext";
 import PromiseComponent from "../PromiseComponent";
 import ComponentRegistry from "../ComponentRegistry";
@@ -40,20 +39,20 @@ export const clearPortals =
     });
   };
 
-export const PromisePortalProvider: React.FC<Props> = ({ children }: Props) => {
+export const PromisePortalProvider = ({ children }: Props) => {
   const [portals, setPortals] = useState<Array<Portal>>([]);
 
   const removePortal = useCallback(
     composeUpdater<[id: string]>(setPortals, removePortalByIdUpdater),
-    []
+    [],
   );
 
   const requestClosePortal = useCallback(
     composeUpdater<[id: string]>(
       setPortals,
-      modifyPortalByIdUpdater({ open: false })
+      modifyPortalByIdUpdater({ open: false }),
     ),
-    []
+    [],
   );
 
   const clear = useCallback(clearPortals(portals), [portals]);
@@ -65,9 +64,9 @@ export const PromisePortalProvider: React.FC<Props> = ({ children }: Props) => {
   };
 
   const showPortalAsync = useCallback(
-    <T,>(
-      component: ComponentParam,
-      props: ComponentProps = {}
+    <P extends ComponentProps, T>(
+      component: ComponentParam<P>,
+      props: ComponentProps = {},
     ): Promise<PromiseComponentResult<T>> => {
       const Component = (
         typeof component === "string"
@@ -78,21 +77,21 @@ export const PromisePortalProvider: React.FC<Props> = ({ children }: Props) => {
       return new Promise((resolve, reject) => {
         const portal = buildAwaitablePortal<T>(resolve, reject)(
           Component,
-          props,
-          internalContext
+          (props as ComponentProps) || {},
+          internalContext,
         ) as Portal;
 
         startTransition(() => {
           setPortals(addPortalUpdater(portal));
-        })
+        });
       });
     },
-    []
+    [],
   );
 
-  const showPortal = (
-    component: ComponentParam,
-    props: ComponentProps = {}
+  const showPortal = <P extends ComponentProps>(
+    component: ComponentParam<P>,
+    props?: P,
   ) => {
     const Component = (
       typeof component === "string"
@@ -119,15 +118,17 @@ export const PromisePortalProvider: React.FC<Props> = ({ children }: Props) => {
   };
 
   return (
-    <PromisePortalContext.Provider value={actions}>
+    <PromisePortalContext value={actions}>
       {children}
       <Suspense fallback={null}>
         {portals.map((portal, index) => {
-          return <PromiseComponent key={portal.id} index={index} data={portal} />;
+          return (
+            <PromiseComponent key={portal.id} index={index} data={portal} />
+          );
         })}
         <Dispatcher {...actions} />
       </Suspense>
-    </PromisePortalContext.Provider>
+    </PromisePortalContext>
   );
 };
 

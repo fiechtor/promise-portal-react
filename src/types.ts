@@ -1,9 +1,12 @@
 import { ComponentType, ErrorInfo, ReactNode, RefObject } from "react";
 import { MatchPortalPredicate } from "./PromisePortalProvider/types";
 
-export type ComponentParam = ComponentType<unknown> | ReactNode | string;
+export type ComponentParam<P extends ComponentProps> =
+  | ComponentType<P>
+  | ReactNode
+  | string;
 
-export type ComponentProps = Record<string, unknown> | undefined;
+export type ComponentProps = Record<string, unknown>;
 
 export type PortalComponentType = ComponentType<
   PromiseComponentProps & ComponentProps
@@ -38,13 +41,13 @@ export interface ShowPortalResult {
 }
 
 export interface PromisePortalActions {
-  showPortal(
-    component: ComponentParam,
-    props?: ComponentProps
+  showPortal<P extends ComponentProps>(
+    component: ComponentParam<P>,
+    props?: P,
   ): ShowPortalResult;
-  showPortalAsync<T = unknown>(
-    component: ComponentParam,
-    props?: ComponentProps
+  showPortalAsync<P extends ComponentProps, T = unknown>(
+    component: ComponentParam<P>,
+    props?: P,
   ): Promise<PromiseComponentResult<T>>;
   clear(predicate?: MatchPortalPredicate): void;
 }
@@ -65,7 +68,7 @@ export interface Portal<T = unknown> {
   /** A convenience prop for triggering open/close animations */
   open: boolean;
   /** Props to be passed down to component */
-  props?: ComponentProps;
+  props: ComponentProps;
   /** Callback for resolving the promise */
   onComplete(data?: T): void;
   /** Callback for rejecting the promise */
