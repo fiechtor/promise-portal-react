@@ -44,11 +44,15 @@ export interface ShowPortalResult {
 
 export interface PromisePortalActions {
   showPortal<P extends ComponentProps>(
-    component: ComponentParam<P>,
+    component: ComponentParam<
+      P & Omit<PromiseComponentProps, "transitionDelay">
+    >,
     props?: P,
   ): ShowPortalResult;
   showPortalAsync<P extends ComponentProps, T = unknown>(
-    component: ComponentParam<P>,
+    component: ComponentParam<
+      P & Omit<PromiseComponentProps, "transitionDelay">
+    >,
     props?: P,
   ): Promise<PromiseComponentResult<T>>;
   clear(predicate?: MatchPortalPredicate): void;

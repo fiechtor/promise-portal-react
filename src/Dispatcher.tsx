@@ -5,6 +5,7 @@ import {
   PromisePortalActions,
   PromiseComponentResult,
   ShowPortalResult,
+  PromiseComponentProps,
 } from "types";
 import { MatchPortalPredicate } from "./PromisePortalProvider/types";
 
@@ -23,14 +24,18 @@ class Dispatcher extends Component<PromisePortalActions> {
   }
 
   static showPortal = <P extends ComponentProps>(
-    component: ComponentParam<P>,
+    component: ComponentParam<
+      P & Omit<PromiseComponentProps, "transitionDelay">
+    >,
     props?: P,
   ): ShowPortalResult => {
     return Dispatcher.instance.props.showPortal<P>(component, props);
   };
 
   static showPortalAsync = async <P extends ComponentProps, T>(
-    component: ComponentParam<P>,
+    component: ComponentParam<
+      P & Omit<PromiseComponentProps, "transitionDelay">
+    >,
     props?: P,
   ): Promise<PromiseComponentResult<T>> => {
     return await Dispatcher.instance.props.showPortalAsync<P, T>(

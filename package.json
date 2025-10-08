@@ -1,6 +1,6 @@
 {
   "name": "@fiechtor/promise-portal-react",
-  "version": "0.2.0",
+  "version": "0.3.1",
   "description": "Allow rendering of promise based components in react and react-native",
   "main": "dist/index.js",
   "scripts": {

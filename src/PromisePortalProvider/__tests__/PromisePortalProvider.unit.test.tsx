@@ -7,7 +7,8 @@ import { clearPortals, PromisePortalProvider } from "../PromisePortalProvider";
 import Dispatcher from "../../Dispatcher";
 import ComponentRegistry from "../../ComponentRegistry";
 
-class BaseMockComponent extends React.Component {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+class BaseMockComponent extends React.Component<any> {
   render() {
     return null;
   }
